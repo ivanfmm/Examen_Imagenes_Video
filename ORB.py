@@ -75,7 +75,8 @@ def dibujar_puntos(image_path, puntos, salida="orb_resultado.png", escala=1.2, r
 
 
 #Ejemplo de uso 
-image_path = "IMG/sol.jpg"
-puntos, descriptores = orb(image_path)
+if __name__ == "__main__":
+    image_path = "IMG/sol.jpg"
+    puntos, descriptores = orb(image_path)
 
-dibujar_puntos(image_path, puntos, salida="orb_resultado_sol.png")
+    dibujar_puntos(image_path, puntos, salida="orb_resultado_sol.png")
