@@ -9,7 +9,7 @@ import Harris
 import BRIEF
 
 
-def orb(image_path, umbral=20, n=9, niveles=4, escala=1.2, max_por_nivel=50):
+def orb(image_path, umbral=20, n=9, niveles=4, escala=1.2, max_por_nivel=50, orientacion=True):
     imagen_pil = Image.open(image_path).convert("L")
     img_array = np.array(imagen_pil, dtype=np.float32)
  
@@ -18,7 +18,7 @@ def orb(image_path, umbral=20, n=9, niveles=4, escala=1.2, max_por_nivel=50):
     puntos = FAST_Harris(piramide, umbral, n, max_por_nivel)
  
     piramide_suave = BRIEF.suavizar_piramide(piramide)
-    puntos, descriptores = BRIEF.BRIEF(piramide_suave, puntos)
+    puntos, descriptores = BRIEF.BRIEF(piramide_suave, puntos, orientacion)
  
     return a_coordenadas_originales(puntos, escala), descriptores
 

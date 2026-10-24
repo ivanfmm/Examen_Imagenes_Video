@@ -13,12 +13,12 @@ def suavizar_piramide(piramide, sigma=2):
         suaves.append(filtro_gauss(imagen_nivel, sigma))
     return suaves
 
-def BRIEF(piramide_suave, keypoints, angulos=None):
+def BRIEF(piramide_suave, keypoints, usar_orientacion=True):
     patron = generar_patron()
     puntos_validos = []
     descriptores = []
 
-    for i, (x, y, nivel, score) in enumerate(keypoints):
+    for x, y, nivel, score in keypoints:
         imagen_nivel = piramide_suave[nivel]
         alto, ancho = imagen_nivel.shape
 
@@ -26,7 +26,7 @@ def BRIEF(piramide_suave, keypoints, angulos=None):
         if x < MARGEN or y < MARGEN or x >= ancho - MARGEN or y >= alto - MARGEN:
             continue
 
-        angulo = 0.0 if angulos is None else angulos[i]
+        angulo = orientacion(imagen_nivel, x, y) if usar_orientacion else 0.0
         descriptores.append(descriptor_brief(imagen_nivel, x, y, patron, angulo))
         puntos_validos.append((x, y, nivel, score))
 
@@ -67,6 +67,14 @@ def rotar(dx, dy, angulo):
     return nuevo_dx, nuevo_dy
 
 
-#se utiliza al comparar 2 imagenes
-def distancia_hamming(d1, d2):
-    return int(np.sum(d1 != d2))
+# Orientacion con el centroide de intensidad
+def orientacion(img, x, y, radio=MITAD_PARCHE):
+    m10 = 0.0
+    m01 = 0.0
+    for dy in range(-radio, radio + 1):
+        for dx in range(-radio, radio + 1):
+            if dx * dx + dy * dy <= radio * radio:
+                valor = img[y + dy, x + dx]
+                m10 += dx * valor
+                m01 += dy * valor
+    return np.arctan2(m01, m10)

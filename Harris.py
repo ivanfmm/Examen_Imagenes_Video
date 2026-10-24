@@ -41,7 +41,18 @@ def harris_score(Ix, Iy, x, y, radio=3, k=0.04):
  
     return determinante - k * traza ** 2
  
- #ordena los socres de mayor a menor y regresa los mejores
-def mejores_puntos(puntos_con_score, cantidad):
+ #ordena los scores y regresa los mejores separados por distancia_min
+def mejores_puntos(puntos_con_score, cantidad, distancia_min=10):
     ordenados = sorted(puntos_con_score, key=lambda p: p[2], reverse=True)
-    return ordenados[:cantidad]
+    elegidos = []
+    for x, y, score in ordenados:
+        lejos = True
+        for ex, ey, _ in elegidos:
+            if (x - ex) ** 2 + (y - ey) ** 2 < distancia_min ** 2:
+                lejos = False
+                break
+        if lejos:
+            elegidos.append((x, y, score))
+            if len(elegidos) == cantidad:
+                break
+    return elegidos

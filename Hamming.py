@@ -6,11 +6,7 @@ import matplotlib.pyplot as plt
 # Distancia de Hamming entre dos descriptores BRIEF (arrays de 0s y 1s).
 # Cuenta en cuantas posiciones los bits son diferentes.
 def distancia_hamming(d1, d2):
-    distancia = 0
-    for i in range(len(d1)):
-        if d1[i] != d2[i]:
-            distancia += 1
-    return distancia
+    return int(np.sum(d1 != d2))
 
 
 # Para cada descriptor de la imagen 1 busca el mas parecido en la imagen 2.
